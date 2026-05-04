@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioMed Diagnostic : Diagnostic Équipements Médicaux</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #7e8fc1;
+            --dark-blue: #6dc18d;
+            --light-blue: #5ca2d0;
+            --accent-cyan: #15dee5;
+            --white: #ffffff;
+            --gray-light: #ffffff;
+            --gray-medium: #262f4a;
+            --dark: #030407;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff1744;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #041734 0%, #e4e9f2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        /* Header */
+        .header {
+            /*background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);*/
+            color: rgb(255, 253, 253);
+            padding: 20px;
+            background: #1a1a2e;
+            box-shadow: 0 4px 20px rgba(0, 102, 204, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: rgb(255, 255, 255);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(23, 111, 134, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .header span {
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+        }
+
+        /* Equipment Selection Panel */
+        .equipment-panel {
+            background: rgb(242, 248, 255);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0, 102, 204, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .equipment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .equipment-card {
+            background: var(--gray-light);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 102, 204, 0.15);
+            border-color: var(--accent-cyan);
+        }
+
+        .equipment-card.active {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            color: white;
+            border-color: var(--primary-blue);
+            transform: scale(1.02);
+        }
+
+        .equipment-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .equipment-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .equipment-card.active .equipment-name {
+            color: white;
+        }
+
+        /* Diagnostic Area */
+        .diagnostic-area {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section-card {
+            background: rgb(244, 250, 255);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 102, 204, 0.1);
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .section-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--light-blue) 0%, #d4e6ff 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+        }
+
+        .section-title {
+            flex: 1;
+        }
+
+        .section-title h2 {
+            color: var(--dark);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .section-title p {
+            color: var(--gray-medium);
+            font-size: 0.95rem;
+        }
+
+        /* Symptoms Input */
+        .symptoms-box {
+            background: var(--gray-light);
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e0e6ed;
+            transition: border-color 0.3s;
+        }
+
+        .symptoms-box:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .symptoms-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            border: none;
+            background: transparent;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--dark);
+            outline: none;
+        }
+
+        textarea::placeholder {
+            color: var(--gray-medium);
+        }
+
+        /* Faults List */
+        .faults-container {
+            display: grid;
+            gap: 15px;
+        }
+
+        .fault-card {
+            background: linear-gradient(135deg, #fff 0%, var(--gray-light) 100%);
+            border-left: 4px solid var(--primary-blue);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fault-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0, 102, 204, 0.15);
+        }
+
+        .fault-card.expanded {
+            background: white;
+            border-left-color: var(--accent-cyan);
+            box-shadow: 0 8px 30px rgba(0, 102, 204, 0.2);
+        }
+
+        .fault-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .fault-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fault-code {
+            background: var(--primary-blue);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .fault-arrow {
+            color: var(--gray-medium);
+            transition: transform 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .fault-card.expanded .fault-arrow {
+            transform: rotate(180deg);
+            color: var(--primary-blue);
+        }
+
+        .fault-solution {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #cbd5e0;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .fault-card.expanded .fault-solution {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .solution-label {
+            color: var(--success);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .solution-text {
+            color: var(--gray-medium);
+            line-height: 1.6;
+            padding-left: 28px;
+        }
+
+        .severity {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+
+        .severity.high { background: #ffebee; color: var(--danger); }
+        .severity.medium { background: #fff3e0; color: var(--warning); }
+        .severity.low { background: #e8f5e9; color: var(--success); }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-medium);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .equipment-panel {
+                position: static;
+            }
+            
+            .equipment-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .equipment-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section-header {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Tech decorative elements */
+        .tech-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.03;
+            background-image: 
+                linear-gradient(90deg, var(--primary-blue) 1px, transparent 1px),
+                linear-gradient(var(--primary-blue) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .pulse {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(0,212,255,0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .equipment-card.active .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-bg"></div>
+    
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">🧰</div>
+            <h1>BioMed <span>• Système de Diagnostic Biomédical</span></h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Equipment Selection -->
+        <div class="equipment-panel">
+            <div class="panel-title">
+                <span>🔧</span>
+                Sélectionner l'équipement
+            </div>
+            <div class="equipment-grid" id="equipmentGrid">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+
+        <!-- Diagnostic Area -->
+        <div class="diagnostic-area" id="diagnosticArea">
+            <div class="empty-state">
+                <div class="empty-icon">🔬</div>
+                <h3>Sélectionnez un équipement médical</h3>
+                <p>Choisissez un équipement dans le panneau de gauche pour voir les pannes courantes et solutions</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database of medical equipment with faults and solutions
+        const equipmentDB = [
+            {
+                id: 'scalpel',
+                name: 'Bistouri Électrique',
+                icon: '📟',
+                faults: [
+                    {
+                        code: '',
+                        title: ' ⚡ Échauffement anormal de la plaque neutre / brûlure du patient',
+                        severity: 'high',
+                        solution: '1)Vérifier le bon positionnement de la plaque<br>2)S\'assurer que la peau est propre et sèche<br>3)Éviter les plis sous la plaque'
+                    },
+                    {
+                        code: '',
+                        title: 'Puissance faible / coupe instable',
+                        severity: 'medium',
+                        solution: '1)Vérifier le réglage de puissance<br>2)Vérifier l\'électrode active (usée ou sale)<br>3)Vérifier la plaque neutre (bon contact avec la peau)'
+                    },
+                    {
+                        code: '',
+                        title: 'L\'appareil ne s\'allume pas',
+                        severity: 'low',
+                        solution: '1)Vérifier la prise électrique et le câble d\'alimentation.<br>2)Vérifier le fusible.<br>3)Tester avec une autre prise.<br<4)Vérifier l\'interrupteur principal.'
+                    },
+                    
+                ]
+            },
+            {
+                id: 'monitor',
+                name: 'Moniteur Patient',
+                icon: '📈',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Écran noir (pas d\'affichage)',
+                        severity: 'high',
+                        solution: '1) Une défaillance de l\'alimentation électrique interne du moniteur empêchant l\'appareil de recevoir la tension nécessaire<br>2) Une défaillance de la carte mère ou de la carte d\'alimentation qui bloque le démarrage du système<br> 3) Un problème au niveau du système d\'affichage (écran LCD ou rétroéclairage) rendant l\'écran totalement noir..'
+                    },
+                    {
+                        code: '',
+                        title: 'SpO2 non mesurable',
+                        severity: 'high',
+                        solution: '1) Changer le capteur (doigt froid, vernis ou ongles artificiels). <br>2) Vérifier le câble. <br> 3)Tester sur autre patient.'
+                    },
+                    {
+                        code: '',
+                        title: 'Tension artérielle impossible',
+                        severity: 'medium',
+                        solution: '1) Vérifier le brassard (taille, position). Contrôler les fuites d\'air (tuyaux, connecteurs). <br>2) Vérifier la pompe.'
+                    },
+                    {
+                        code: '',
+                        title: 'Batterie ne charge pas',
+                        severity: 'low',
+                        solution: '1) Vérifier le chargeur.<br>2) Tester la batterie (remplacer si <2h autonomie).<br> 3) Contrôler le circuit de charge.'
+                    }
+                ]
+            },
+            {
+                id: 'syringe',
+                name: 'Pousse-Seringue',
+                icon: '💉',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Occlusion alarme',
+                        severity: 'high',
+                        solution: '1)Vérifier l\'obstruction de la ligne de perfusion.<br>2)Vérifier le bon positionnement de la seringue dans le dispositif.'
+                    },
+
+                    {
+                        code: '',
+                        title: 'Précision de débit incorrecte',
+                        severity: 'high',
+                        solution: '1)Calibrer la pompe. <br>2)Vérifier le diamètre de seringue programmé.<br>3) Contrôler le moteur pas à pas.'
+                    },
+
+                    {
+                        code: '',
+                        title: 'Seringue non reconnue',
+                        severity: 'medium',
+                        solution: '1)Nettoyer le détecteur de seringue.<br> 2) Vérifier le type de seringue (marque compatible).'
+                    },
+                ]
+            },
+            {
+                id: 'autoclave',
+                name: 'Autoclave',
+                icon: '♨️',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Cycle stérilisation échoué',
+                        severity: 'high',
+                        solution: '1)Vérifier les paramètres du cycle (température, pression et durée).<br>2)Vérifier les capteurs de température et de pression.<br>3)Redémarrer l\'autoclave et relancer un nouveau cycle.'
+                    },
+                    {
+                        code: '',
+                        title: 'Fuite de vapeur',
+                        severity: 'high',
+                        solution: '1)Vérifier le joint d\'étanchéité de la porte et le remplacer s\'il est endommagé.<br>2)S\'assurer que la porte est correctement fermée et bien serrée.<br>3)Nettoyer les surfaces de contact entre la porte et la chambre.'
+                    },
+                    {
+                        code: '',
+                        title: 'Pompe à vide inefficace',
+                        severity: 'medium',
+                        solution: '1)Vérifier le bon fonctionnement de la pompe à vide.<br>2)Vérifier le niveau d\'huile de la pompe (si pompe à huile)..<br>3)Contrôler les fuites d\'air dans le circuit (tuyaux, raccords, joints).'
+                    },
+                   
+                    {
+                        code: '',
+                        title: 'Erreur de porte',
+                        severity: 'low',
+                        solution: '1)Vérifier le verrouillage.<br>2) Contrôler les capteurs de fermeture.<br>3) Lubrifier les charnières.'
+                    }
+                ]
+            },
+            {
+                id: 'aspirator',
+                name: 'Aspirateur Chirurgical',
+                icon: '🌪️',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Absence d\'aspiration',
+                        severity: 'high',
+                        solution: '1)Vérifier le moteur de la pompe d\'aspiration.<br>2)Contrôler le filtre antibactérien (obstruction).<br>3) Vérifier les tuyaux (déconnexion ou fuite).'
+                    },
+                    {
+                        code: '',
+                        title: 'Aspiration faible',
+                        severity: 'medium',
+                        solution: '1) Nettoyer ou remplacer le filtre.<br>2)Vérifier l\'étanchéité des raccords et tuyaux.<br>3)Vérifier la puissance de réglage d\'aspiration.'
+                    },
+
+                    {
+                        code: '',
+                        title: 'L\'appareil ne s\'allume pas',
+                        severity: 'low',
+                        solution: '1)Vérifier la prise électrique.<br>2) Contrôler le câble d\'alimentation.<br>3)Vérifier le fusible.<br>4)Tester une autre prise.'
+                    },
+                     {
+                        code: '',
+                        title: 'Bruit anormal du moteur',
+                        severity: 'low',
+                        solution: '1)Vérifier la turbine ou le moteur.<br>2) Nettoyer les filtres.<br>3)Contrôler l\'absence de blocage mécanique.'
+                    }
+                ]
+            },
+            {
+                id: 'xray',
+                name: 'Radiographie Standard',
+                icon: '🦴',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Pas d\'exposition',
+                        severity: 'high',
+                        solution: '1)Vérifier le tube (filament, vide).<br>2) Contrôler le générateur HT.<br>3) Vérifier les câbles haute tension.'
+                    },
+                    {
+                        code: '',
+                        title: 'Image bruitée / Contraste faible',
+                        severity: 'medium',
+                        solution: 'Vérifier la tension et l\'intensité. Calibrer le détecteur. Nettoyer le collimateur. Vérifier la grille anti-diffusante.'
+                    },
+                    {
+                        code: '',
+                        title: 'Erreur de positionnement tube',
+                        severity: 'medium',
+                        solution: 'Vérifier les butées mécaniques. Contrôler les moteurs de positionnement. Calibrer les encodeurs.'
+                    },
+                    {
+                        code: '',
+                        title: 'Fuite de radiation détectée',
+                        severity: 'high',
+                        solution: 'ARRÊT IMMÉDIAT. Vérifier les joints du tube. Contrôler l\'enveloppe plombée. Appeler physicien médical.'
+                    },
+                    {
+                        code: '',
+                        title: 'Console ne répond pas',
+                        severity: 'low',
+                        solution: 'Redémarrer le système. Vérifier les connexions réseau. Tester l\'alimentation de la console.'
+                    }
+                ]
+            },
+            {
+                id: 'defibrillator',
+                name: 'Défibrillateur',
+                icon: '⚡',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Absence de choc électrique',
+                        severity: 'high',
+                        solution: '1)Vérifier la charge de la batterie ou l\'alimentation secteur.<br>2)Remplacer les électrodes si expirées ou endommagées.<br>3)Vérifier le circuit de décharge (condensateur).'
+                    },
+                    {
+                        code: '',
+                        title: 'Défaut d\'analyse du rythme cardiaque',
+                        severity: 'high',
+                        solution: '1)Vérifier le bon contact des électrodes avec la peau.<br>2)Nettoyer la peau.<br>3)Contrôler les câbles et connecteurs.'
+                    },
+                    {
+                        code: '',
+                        title: 'Charge lente ou non complète',
+                        severity: 'medium',
+                        solution: '1)Vérifier la batterie (faible capacité).<br>2)Remplacer la batterie si nécessaire'
+                    },
+                    {
+                        code: '',
+                        title: 'Message d\'erreur simple / écran bloqué',
+                        severity: 'low',
+                        solution: '1) Redémarrer l\'appareil.<br>2)Vérifier les connexions des accessoires'
+                    }
+                ]
+            },
+
+            {
+                id: 'ultrasound',
+                name: 'Échographe',
+                icon: '🔊',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Absence totale d\'image (écran noir / pas d\'acquisition)',
+                        severity: 'high',
+                        solution: '1)Vérifier l\'alimentation électrique et le fusible.<br>2)Vérifier la sonde et son branchement.<br>3)Redémarrer l\'échographe.'
+                    },
+                    {
+                        code: '',
+                        title: 'Sonde non détectée / sonde défectueuse',
+                        severity: 'higt',
+                        solution: '1)Vérifier le connecteur de la sonde (broches, poussière).<br>2)Nettoyer le port de connexion.<br>3)Remplacer la sonde si nécessaire.'
+                    },
+                    {
+                        code: '',
+                        title: 'Image de mauvaise qualité (bruit, faible résolution)',
+                        severity: 'medium',
+                        solution: '1)Vérifier les réglages (gain, profondeur, focus).<br>2)Vérifier les réglages (gain, profondeur, focus).'
+                    },
+                    {
+                        code: '',
+                        title: 'Imprimante ne fonctionne pas',
+                        severity: 'low',
+                        solution: '1)Vérifier le papier.<b> Contrôler la connexion imprimante. Tester l\'export numérique.'
+                    }
+                ]
+            },
+
+            {
+                id: 'infusion',
+                name: 'Scanner ',
+                icon: '🩻',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Erreur tube RX / tube ne démarre pas',
+                        severity: 'high',
+                        solution: '1)Vérifier le système haute tension (HT generator).<br>2)Vérifier le système de refroidissement (huile, ventilateur).<br>3)Redémarrer et consulter les codes erreurs.'
+                    },
+                    {
+                        code: '',
+                        title: 'Problème de table patient (ne bouge pas / mouvement lent)',
+                        severity: 'medium',
+                        solution: '1)Vérifier le moteur et les rails.<br>2) Contrôler le système de commande.<br>3) Nettoyer et lubrifier les rails.'
+                    },
+                     {
+                        code: '',
+                        title: 'Problème logiciel / interface bloquée',
+                        severity: 'low',
+                        solution: '1)Redémarrer la console.<br>2) Vérifier la connexion réseau.<br>3) Nettoyer et lubrifier les rails.'
+                    }
+                ]
+            },
+            {
+                id: 'infusion',
+                name: 'Pompe à Perfusion',
+                icon: '💊',
+
+                faults: [
+                    {
+                        code: '',
+                        title: 'Alarme bolus',
+                        severity: 'high',
+                        solution: 'Vérifier la ligne (occlusion distal). Contrôler le clamp. Vérifier le réglage de sensibilité.'
+                    },
+                    {
+                        code: '',
+                        title: 'Précision débit',
+                        severity: 'high',
+                        solution: 'Calibrer la pompe. Vérifier le type de set programmé. Contrôler le moteur.'
+                    },
+                    {
+                        code: '',
+                        title: 'Porte set ne ferme pas',
+                        severity: 'medium',
+                        solution: 'Nettoyer le mécanisme. Vérifier le capteur de fermeture. Lubrifier si nécessaire.'
+                    }
+                ]
+            },
+            {
+                id: 'ecg',
+                name: 'ECG ',
+                icon: '💓',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Absence totale de signal ECG',
+                        severity: 'high',
+                        solution: '1)Vérifier les électrodes et leur position.<br>2)Contrôler les câbles patient.<br>3)Vérifier la carte interne.'
+                    },
+                    {
+                        code: '',
+                        title: 'Mauvaise impression papier',
+                        severity: 'medium',
+                        solution: '1)Vérifier le papier thermique.<br>2)Nettoyer la tête d\'impression.<br>3)Vérifier l\'état du rouleau et du mécanisme.<br>4)Vérifier les paramètres d\'impression.'
+                    },
+                    {
+                        code: '',
+                        title: 'Écran figé / erreur logicielle',
+                        severity: 'low',
+                        solution: '1)Redémarrer l\'appareil.<br>2)Faire une réinitialisation (reset).<br>3)Vérifier la version du logiciel si possible.'
+                    }
+                ]
+            },
+                 
+            {
+                id: 'incubator',
+                name: 'Couveuse Néonatale',
+                icon: '👶🏻',
+                faults: [
+                    {
+                        code: '',
+                        title: 'Température instable / ne chauffe pas',
+                        severity: 'high',
+                        solution: '1)Vérifier la résistance chauffante.<br>2) Contrôler le capteur de température (sonde).<br>3) Vérifier la ventilation interne.'
+                    },
+                    {
+                        code: '',
+                        title: 'Humidification insuffisante / humidité faible',
+                        severity: 'medium',
+                        solution: '1)Vérifier le niveau d\'eau dans le réservoir.<br>2)Nettoyer le système d\'humidification.<br>3)Vérifier le capteur d\'humidité. '
+                    },
+                    {
+                        code: '',
+                        title: 'Éclairage ne fonctionne pas',
+                        severity: 'low',
+                        solution: '1)Vérifier la lampe/LED.<br>2)Vérifier les connexions.<br>3)Remplacer l\'ampoule si nécessaire..'
+                    }
+                ]
+            },
+           
+                  
+        ]
+
+        let currentEquipment = null;
+
+        // Initialize
+        function init() {
+            renderEquipmentGrid();
+        }
+
+        // Render equipment grid
+        function renderEquipmentGrid() {
+            const grid = document.getElementById('equipmentGrid');
+            grid.innerHTML = equipmentDB.map(eq => `
+                <div class="equipment-card" onclick="selectEquipment('${eq.id}')" id="card-${eq.id}">
+                    <div class="pulse"></div>
+                    <span class="equipment-icon">${eq.icon}</span>
+                    <div class="equipment-name">${eq.name}</div>
+                </div>
+            `).join('');
+        }
+
+        // Select equipment
+        function selectEquipment(id) {
+            // Update active state
+            document.querySelectorAll('.equipment-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.getElementById(`card-${id}`).classList.add('active');
+
+            currentEquipment = equipmentDB.find(eq => eq.id === id);
+            renderDiagnosticArea();
+        }
+
+        // Render diagnostic area
+        function renderDiagnosticArea() {
+            const area = document.getElementById('diagnosticArea');
+            
+            if (!currentEquipment) {
+                area.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔬</div>
+                        <h3>Sélectionnez un équipement médical</h3>
+                        <p>Choisissez un équipement dans le panneau de gauche pour voir les pannes courantes et solutions</p>
+                    </div>
+                `;
+                return;
+            }
+
+            area.innerHTML = `
+                <!-- Symptoms Section -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-icon">${currentEquipment.icon}</div>
+                        <div class="section-title">
+                            <h2>${currentEquipment.name}</h2>
+                            
+                        </div>
+                    </div>
+                    
+                    
+                <!-- Faults Section -->
+                <div class="section-card">
+                    <div class="section-header">
+                        <div class="section-icon" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); color: #ff6f00;">
+                            🔧
+                        </div>
+                        <div class="section-title">
+                            <h2>Pannes Courantes & Solutions</h2>
+                            <p>Cliquez sur une panne pour voir la procédure de résolution</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faults-container">
+                        ${currentEquipment.faults.map((fault, index) => `
+                            <div class="fault-card" onclick="toggleFault(this)">
+                                <div class="fault-header">
+                                    <div class="fault-title">
+                                        <span>${fault.code}</span>
+                                        ${fault.title}
+                                        <span class="severity ${fault.severity}">
+                                            ${fault.severity === 'high' ? 'CRITIQUE' : fault.severity === 'medium' ? 'MOYEN' : 'FAIBLE'}
+                                        </span>
+                                    </div>
+                                    <div class="fault-arrow">▼</div>
+                                </div>
+                                <div class="fault-solution">
+                                    <div class="solution-label">
+                                        <span>✓</span>
+                                        Solution / Procédure
+                                    </div>
+                                    <div class="solution-text">${fault.solution}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle fault expansion
+        function toggleFault(element) {
+            // Close others
+            document.querySelectorAll('.fault-card').forEach(card => {
+                if (card !== element) card.classList.remove('expanded');
+            });
+            
+            // Toggle current
+            element.classList.toggle('expanded');
+        }
+
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+</html>
